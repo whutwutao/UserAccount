@@ -1,0 +1,9 @@
+@media screen and (max-width: 950px) {
+    .layui-body {
+        left: 0;
+    }
+    #left-side {
+        visibility: hidden;
+        width: 0;
+    }
+}

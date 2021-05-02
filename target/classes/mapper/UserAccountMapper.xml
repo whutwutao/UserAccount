@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 将CustomerDao接口对应方法映射到mybatis中，编写相应的sql语句 -->
+<mapper namespace="com.whut.useraccount.mapper.UserAccountMapper">
+    <insert id="addUserAccount" parameterType="UserAccount">
+        insert into t_user_account(id,name,password,gender,birth,deposit)
+        value (null,#{name},#{password},#{gender},#{birth},#{deposit});
+    </insert>
+
+    <select id="findAll" resultType="UserAccount">
+        select * from t_user_account
+        limit #{offset}, #{pageRecord}
+    </select>
+
+    <select id="findById" resultType="UserAccount">
+        select * from t_user_account
+        where id = #{id}
+    </select>
+
+    <select id="findByName" resultType="UserAccount">
+        select * from t_user_account
+        where name = #{name}
+    </select>
+
+    <update id="changePassword">
+        update t_user_account
+        set password = #{password}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserAccount">
+        delete from t_user_account
+        where id = #{id}
+    </delete>
+
+    <update id="editUserAccount">
+        update t_user_account
+        set name = #{userAccount.name},
+            password = #{userAccount.password},
+            gender = #{userAccount.gender},
+            birth = #{userAccount.birth},
+            deposit = #{userAccount.deposit}
+        where id = #{id}
+    </update>
+
+    <select id="countUserAccount" resultType="int">
+        select count(*) from t_user_account
+        <!--包含模糊查询的sql片段-->
+        <include refid="query_userAccount_where"/>
+    </select>
+
+    <select id="queryAll" resultType="UserAccount">
+        select * from t_user_account
+        <!--包含模糊查询sql片段-->
+        <include refid="query_userAccount_where"/>
+        limit #{offset}, #{pageRecord}
+    </select>
+
+    <!--用来模糊查询的sql片段-->
+    <sql id = "query_userAccount_where">
+        where 1 = 1
+        <if test="userAccount != null">
+            <if test="userAccount.name != null and userAccount.name != ''">
+                and name like "%${userAccount.name}%"
+            </if>
+            <if test="userAccount.gender != null and userAccount.gender != ''">
+                and gender like "%${userAccount.gender}%"
+            </if>
+        </if>
+    </sql>
+</mapper>
